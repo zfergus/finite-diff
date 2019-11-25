@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(finite-diff)
+project(FiniteDiff)
 
 ### Configuration
 set(${PROJECT_NAME}_EXTERNAL "${CMAKE_CURRENT_SOURCE_DIR}/external")
@@ -9,7 +9,7 @@ include(Warnings)
 include(${PROJECT_NAME}Dependencies)
 
 ################################################################################
-# finite-diff Library
+# FiniteDiff Library
 ################################################################################
 
 add_library(${PROJECT_NAME} "finitediff.cpp")
