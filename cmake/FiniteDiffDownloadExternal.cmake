@@ -8,7 +8,7 @@ else()
   set(FINITE_DIFF_EXTRA_OPTIONS "")
 endif()
 
-function(custom_download_project name)
+function(finite_diff_download_project name)
   download_project(
     PROJ         ${name}
     SOURCE_DIR   ${FINITE_DIFF_EXTERNAL}/${name}
@@ -23,7 +23,7 @@ endfunction()
 
 ## Eigen
 function(download_eigen)
-	custom_download_project(eigen
+	finite_diff_download_project(eigen
 		GIT_REPOSITORY https://github.com/eigenteam/eigen-git-mirror.git
 		GIT_TAG        3.3.7
 	)
