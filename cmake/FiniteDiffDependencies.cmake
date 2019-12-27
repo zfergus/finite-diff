@@ -19,7 +19,7 @@ if(NOT TARGET Eigen3::Eigen)
   download_eigen()
   add_library(${PROJECT_NAME}_eigen INTERFACE)
   target_include_directories(${PROJECT_NAME}_eigen SYSTEM INTERFACE
-    $<BUILD_INTERFACE:${${PROJECT_NAME}_EXTERNAL}/eigen>
+    $<BUILD_INTERFACE:${FINITE_DIFF_EXTERNAL}/eigen>
     $<INSTALL_INTERFACE:include>
   )
   set_property(TARGET ${PROJECT_NAME}_eigen PROPERTY EXPORT_NAME Eigen3::Eigen)

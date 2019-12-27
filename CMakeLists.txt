@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.9)
 project(FiniteDiff)
 
 ### Configuration
-set(${PROJECT_NAME}_EXTERNAL "${CMAKE_CURRENT_SOURCE_DIR}/external")
+set(FINITE_DIFF_EXTERNAL "${CMAKE_CURRENT_SOURCE_DIR}/external")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(Warnings)
