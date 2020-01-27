@@ -22,6 +22,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/)
 # Eigen
 target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen)
 
+# Logger
+target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
+
 # Extra warnings
 target_link_libraries(${PROJECT_NAME} PRIVATE warnings::all)
 

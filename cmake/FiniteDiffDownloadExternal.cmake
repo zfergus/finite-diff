@@ -28,3 +28,11 @@ function(download_eigen)
 		GIT_TAG        3.3.7
 	)
 endfunction()
+
+## spdlog
+function(download_spdlog)
+    custom_download_project(spdlog
+       GIT_REPOSITORY https://github.com/gabime/spdlog.git
+       GIT_TAG        v1.3.1
+    )
+endfunction()

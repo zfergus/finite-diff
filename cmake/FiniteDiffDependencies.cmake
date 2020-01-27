@@ -25,3 +25,13 @@ if(NOT TARGET Eigen3::Eigen)
   set_property(TARGET ${PROJECT_NAME}_eigen PROPERTY EXPORT_NAME Eigen3::Eigen)
   add_library(Eigen3::Eigen ALIAS ${PROJECT_NAME}_eigen)
 endif()
+
+# spdlog
+if(NOT TARGET spdlog::spdlog)
+    download_spdlog()
+    add_library(spdlog INTERFACE)
+    add_library(spdlog::spdlog ALIAS spdlog)
+    target_include_directories(spdlog SYSTEM INTERFACE ${FIXING_COLLISIONS_EXTERNAL}/spdlog/include)
+    target_compile_definitions(spdlog INTERFACE -DSPDLOG_FMT_EXTERNAL)
+    target_link_libraries(spdlog INTERFACE fmt::fmt)
+endif()

@@ -58,12 +58,14 @@ void finite_jacobian(const Eigen::VectorXd& x,
  * @param[in] x         The first gradient to compare.
  * @param[in] y         The second gradient to compare against.
  * @param[in] test_eps  Tolerance of equality.
+ * @param[in] msg       Debug message header.
  *
  * @return A boolean for if x and y are close to the same value.
  */
 bool compare_gradient(const Eigen::VectorXd& x,
     const Eigen::VectorXd& y,
-    const double test_eps = 1e-4);
+    const double test_eps = 1e-4,
+    const std::string& msg = "compare_gradient ");
 
 /**
  * @brief Compare if two jacobians are close enough.
@@ -71,11 +73,13 @@ bool compare_gradient(const Eigen::VectorXd& x,
  * @param[in] x         The first jacobian to compare.
  * @param[in] y         The second jacobian to compare against.
  * @param[in] test_eps  Tolerance of equality.
+ * @param[in] msg       Debug message header.
  *
  * @return A boolean for if x and y are close to the same value.
  */
 bool compare_jacobian(const Eigen::MatrixXd& x,
     const Eigen::MatrixXd& y,
-    const double test_eps = 1e-4);
+    const double test_eps = 1e-4,
+    const std::string& msg = "compare_jacobian ");
 
 } // namespace fd

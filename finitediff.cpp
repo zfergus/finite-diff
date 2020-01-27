@@ -6,6 +6,8 @@
 #include <array>
 #include <vector>
 
+#include <spdlog/spdlog.h>
+
 namespace fd {
 
 // Compute the gradient of a function at a point using finite differences.
@@ -84,8 +86,10 @@ void finite_jacobian(const Eigen::VectorXd& x,
 }
 
 // Compare if two gradients are close enough.
-bool compare_gradient(
-    const Eigen::VectorXd& x, const Eigen::VectorXd& y, const double test_eps)
+bool compare_gradient(const Eigen::VectorXd& x,
+    const Eigen::VectorXd& y,
+    const double test_eps,
+    const std::string& msg)
 {
     assert(x.rows() == y.rows());
 
@@ -95,6 +99,10 @@ bool compare_gradient(
         double abs_diff = fabs(x[d] - y[d]);
 
         if (abs_diff > test_eps * scale) {
+            spdlog::debug("{} eps={:.3e} r={} x={:.3e} y={:.3e} |x-y|={:.3e} "
+                          "|x-y|/|x|={:.3e} |x-y|/|y={:3e}",
+                msg, test_eps, d, x(d), y(d), abs_diff, abs_diff / fabs(x(d)),
+                abs_diff / fabs(y(d)));
             same = false;
         }
     }
@@ -102,8 +110,10 @@ bool compare_gradient(
 }
 
 // Compare if two jacobians are close enough.
-bool compare_jacobian(
-    const Eigen::MatrixXd& x, const Eigen::MatrixXd& y, const double test_eps)
+bool compare_jacobian(const Eigen::MatrixXd& x,
+    const Eigen::MatrixXd& y,
+    const double test_eps,
+    const std::string& msg)
 {
     assert(x.rows() == y.rows());
     assert(x.cols() == y.cols());
@@ -117,6 +127,10 @@ bool compare_jacobian(
             double abs_diff = fabs(x(d, c) - y(d, c));
 
             if (abs_diff > test_eps * scale) {
+                spdlog::debug("{} eps={:.3e} r={} c={} x={:.3e} y={:.3e} "
+                              "|x-y|={:.3e} |x-y|/|x|={:.3e} |x-y|/|y={:3e}",
+                    msg, test_eps, d, c, x(d, c), y(d, c), abs_diff,
+                    abs_diff / fabs(x(d, c)), abs_diff / fabs(y(d, c)));
                 same = false;
             }
         }
