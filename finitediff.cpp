@@ -100,7 +100,7 @@ bool compare_gradient(const Eigen::VectorXd& x,
 
         if (abs_diff > test_eps * scale) {
             spdlog::debug("{} eps={:.3e} r={} x={:.3e} y={:.3e} |x-y|={:.3e} "
-                          "|x-y|/|x|={:.3e} |x-y|/|y={:3e}",
+                          "|x-y|/|x|={:.3e} |x-y|/|y|={:3e}",
                 msg, test_eps, d, x(d), y(d), abs_diff, abs_diff / fabs(x(d)),
                 abs_diff / fabs(y(d)));
             same = false;
@@ -128,7 +128,7 @@ bool compare_jacobian(const Eigen::MatrixXd& x,
 
             if (abs_diff > test_eps * scale) {
                 spdlog::debug("{} eps={:.3e} r={} c={} x={:.3e} y={:.3e} "
-                              "|x-y|={:.3e} |x-y|/|x|={:.3e} |x-y|/|y={:3e}",
+                              "|x-y|={:.3e} |x-y|/|x|={:.3e} |x-y|/|y|={:3e}",
                     msg, test_eps, d, c, x(d, c), y(d, c), abs_diff,
                     abs_diff / fabs(x(d, c)), abs_diff / fabs(y(d, c)));
                 same = false;
