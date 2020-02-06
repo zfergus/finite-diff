@@ -25,13 +25,13 @@ matrix:
     - MATRIX_EVAL="export CC=gcc-7 && CXX=g++-7 && CONFIG=Release"
 
   - os: osx
-    osx_image: xcode10.2
+    osx_image: xcode11.3
     compiler: clang
     env:
     - MATRIX_EVAL="export CONFIG=Debug"
 
   - os: osx
-    osx_image: xcode10.2
+    osx_image: xcode11.3
     compiler: clang
     env:
     - MATRIX_EVAL="export CONFIG=Release"
@@ -45,6 +45,6 @@ install:
 script:
 - mkdir build
 - cd build
-- cmake -DCMAKE_BUILD_TYPE=$CONFIG -DNOETHER_WITH_EXACT_CCD=ON ${EXTRA_FLAGS} ..
+- cmake -DCMAKE_BUILD_TYPE=$CONFIG ${EXTRA_FLAGS} ..
 - make -j2
 - ccache --show-stats
