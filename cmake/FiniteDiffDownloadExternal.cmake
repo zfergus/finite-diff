@@ -21,12 +21,12 @@ endfunction()
 
 ################################################################################
 
-## Eigen
+# Eigen
 function(download_eigen)
-	finite_diff_download_project(eigen
-		GIT_REPOSITORY https://github.com/eigenteam/eigen-git-mirror.git
-		GIT_TAG        3.3.7
-	)
+    finite_diff_download_project(eigen
+        URL           http://bitbucket.org/eigen/eigen/get/3.3.7.tar.bz2
+        URL_MD5       05b1f7511c93980c385ebe11bd3c93fa
+    )
 endfunction()
 
 ## spdlog
