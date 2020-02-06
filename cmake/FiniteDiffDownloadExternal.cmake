@@ -22,7 +22,7 @@ endfunction()
 ################################################################################
 
 # Eigen
-function(download_eigen)
+function(finite_diff_download_eigen)
     finite_diff_download_project(eigen
         URL           http://bitbucket.org/eigen/eigen/get/3.3.7.tar.bz2
         URL_MD5       05b1f7511c93980c385ebe11bd3c93fa
@@ -30,7 +30,7 @@ function(download_eigen)
 endfunction()
 
 ## spdlog
-function(download_spdlog)
+function(finite_diff_download_spdlog)
     finite_diff_download_project(spdlog
        GIT_REPOSITORY https://github.com/gabime/spdlog.git
        GIT_TAG        v1.3.1

@@ -16,7 +16,7 @@ include(${PROJECT_NAME}DownloadExternal)
 
 # Eigen
 if(NOT TARGET Eigen3::Eigen)
-  download_eigen()
+  finite_diff_download_eigen()
   add_library(${PROJECT_NAME}_eigen INTERFACE)
   target_include_directories(${PROJECT_NAME}_eigen SYSTEM INTERFACE
     $<BUILD_INTERFACE:${FINITE_DIFF_EXTERNAL}/eigen>
@@ -28,7 +28,7 @@ endif()
 
 # spdlog
 if(NOT TARGET spdlog::spdlog)
-    download_spdlog()
+    finite_diff_download_spdlog()
     add_library(spdlog INTERFACE)
     add_library(spdlog::spdlog ALIAS spdlog)
     target_include_directories(spdlog SYSTEM INTERFACE ${FINITE_DIFF_EXTERNAL}/spdlog/include)
