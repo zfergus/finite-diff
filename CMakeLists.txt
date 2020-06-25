@@ -4,7 +4,7 @@ project(FiniteDiff)
 ################################################################################
 
 # project-options
-option(FINITE_DIFF_BUILD_UNIT_TESTS         "Build unit-tests"      ON)
+option(FINITE_DIFF_BUILD_UNIT_TESTS         "Build unit-tests"      OFF)
 
 ################################################################################
 

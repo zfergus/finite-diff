@@ -45,7 +45,7 @@ install:
 script:
 - mkdir build
 - cd build
-- cmake -DCMAKE_BUILD_TYPE=$CONFIG ${EXTRA_FLAGS} ..
+- cmake -DCMAKE_BUILD_TYPE=$CONFIG ${EXTRA_FLAGS} -DFINITE_DIFF_BUILD_UNIT_TESTS=ON ..
 - make -j2
 - make test
 - ccache --show-stats
