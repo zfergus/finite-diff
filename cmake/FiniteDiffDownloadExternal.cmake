@@ -36,3 +36,11 @@ function(finite_diff_download_spdlog)
        GIT_TAG        v1.3.1
     )
 endfunction()
+
+# Catch2 for unit tests
+function(finite_diff_download_catch2)
+  finite_diff_download_project(Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG        v2.12.2
+  )
+endfunction()

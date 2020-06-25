@@ -31,26 +31,46 @@ enum AccuracyOrder {
  * @param[in]  accuracy  Accuracy of the finite differences.
  * @param[in]  eps       Value of the finite difference step.
  */
-void finite_gradient(const Eigen::VectorXd& x,
-    std::function<double(const Eigen::VectorXd&)> f,
+void finite_gradient(
+    const Eigen::VectorXd& x,
+    const std::function<double(const Eigen::VectorXd&)>& f,
     Eigen::VectorXd& grad,
-    AccuracyOrder accuracy = SECOND,
+    const AccuracyOrder accuracy = SECOND,
     const double eps = 1.0e-8);
 
 /**
  * @brief Compute the jacobian of a function using finite differences.
  *
- * @param[in]  x         Point at which to compute the gradient.
- * @param[in]  f         Compute the gradient of this function.
+ * @param[in]  x         Point at which to compute the jacobian.
+ * @param[in]  f         Compute the jacobian of this function.
  * @param[out] jac       Computed jacobian.
  * @param[in]  accuracy  Accuracy of the finite differences.
  * @param[in]  eps       Value of the finite difference step.
  */
-void finite_jacobian(const Eigen::VectorXd& x,
-    std::function<Eigen::VectorXd(const Eigen::VectorXd&)> f,
+void finite_jacobian(
+    const Eigen::VectorXd& x,
+    const std::function<Eigen::VectorXd(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& jac,
     const AccuracyOrder accuracy = SECOND,
     const double eps = 1.0e-8);
+
+/**
+ * @brief Compute the hessian of a function using finite differences.
+ *
+ * NOTE: Only second order accurate for now.
+ *
+ * @param[in]  x         Point at which to compute the hessian.
+ * @param[in]  f         Compute the hessian of this function.
+ * @param[out] hess      Computed hessian.
+ * @param[in]  accuracy  Accuracy of the finite differences.
+ * @param[in]  eps       Value of the finite difference step.
+ */
+void finite_hessian(
+    const Eigen::VectorXd& x,
+    const std::function<double(const Eigen::VectorXd&)>& f,
+    Eigen::MatrixXd& hess,
+    // const AccuracyOrder accuracy = SECOND,
+    const double eps = 1.0e-5);
 
 /**
  * @brief Compare if two gradients are close enough.
@@ -62,7 +82,8 @@ void finite_jacobian(const Eigen::VectorXd& x,
  *
  * @return A boolean for if x and y are close to the same value.
  */
-bool compare_gradient(const Eigen::VectorXd& x,
+bool compare_gradient(
+    const Eigen::VectorXd& x,
     const Eigen::VectorXd& y,
     const double test_eps = 1e-4,
     const std::string& msg = "compare_gradient ");
@@ -77,9 +98,26 @@ bool compare_gradient(const Eigen::VectorXd& x,
  *
  * @return A boolean for if x and y are close to the same value.
  */
-bool compare_jacobian(const Eigen::MatrixXd& x,
+bool compare_jacobian(
+    const Eigen::MatrixXd& x,
     const Eigen::MatrixXd& y,
     const double test_eps = 1e-4,
     const std::string& msg = "compare_jacobian ");
+
+/**
+ * @brief Compare if two hessians are close enough.
+ *
+ * @param[in] x         The first hessian to compare.
+ * @param[in] y         The second hessian to compare against.
+ * @param[in] test_eps  Tolerance of equality.
+ * @param[in] msg       Debug message header.
+ *
+ * @return A boolean for if x and y are close to the same value.
+ */
+bool compare_hessian(
+    const Eigen::MatrixXd& x,
+    const Eigen::MatrixXd& y,
+    const double test_eps = 1e-4,
+    const std::string& msg = "compare_hessian ");
 
 } // namespace fd
