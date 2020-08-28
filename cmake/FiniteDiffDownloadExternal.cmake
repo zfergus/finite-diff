@@ -24,8 +24,8 @@ endfunction()
 # Eigen
 function(finite_diff_download_eigen)
     finite_diff_download_project(eigen
-        URL           http://bitbucket.org/eigen/eigen/get/3.3.7.tar.bz2
-        URL_MD5       05b1f7511c93980c385ebe11bd3c93fa
+        GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+        GIT_TAG        3.3.7
     )
 endfunction()
 
