@@ -33,7 +33,7 @@ endfunction()
 function(finite_diff_download_spdlog)
     finite_diff_download_project(spdlog
        GIT_REPOSITORY https://github.com/gabime/spdlog.git
-       GIT_TAG        v1.3.1
+       GIT_TAG        v1.8.0
     )
 endfunction()
 
