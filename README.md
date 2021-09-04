@@ -1,7 +1,7 @@
 # Finite Differences
 
-<a href="https://travis-ci.com/zfergus/finite-diff"><img src="https://travis-ci.com/zfergus/finite-diff.svg?branch=master" title="Build Status" alt="Build Status"></img></a>
-<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/zfergus/finite-diff.svg?color=blue"></img></a>
+[![Build Status](https://app.travis-ci.com/zfergus/finite-diff.svg?branch=main)](https://app.travis-ci.com/zfergus/finite-diff)
+[![License](https://img.shields.io/github/license/zfergus/finite-diff.svg?color=blue)](https://opensource.org/licenses/MIT)
 
 A simple finite difference library.
 
