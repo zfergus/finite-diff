@@ -27,13 +27,13 @@ jobs:
         config: [Debug, Release]
         include:
           - os: macos-10.15
-            name: macOS-10.15
+            name: macOS 10.15
           - os: macos-11
-            name: macOS-11
+            name: macOS 11
           - os: ubuntu-18.04
-            name: Linux
+            name: Ubunutu 18.04
           - os: ubuntu-20.04
-            name: Linux
+            name: Ubunutu 20.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -93,9 +93,9 @@ jobs:
         os: [windows-2019, windows-2022]
         include:
           - os: windows-2019
-            name: windows-2019
+            name: Windows 2019
           - os: windows-2022
-            name: windows-2022
+            name: Windows 2022
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
