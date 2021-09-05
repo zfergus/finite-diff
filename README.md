@@ -1,6 +1,6 @@
 # Finite Differences
 
-[![Build Status](https://app.travis-ci.com/zfergus/finite-diff.svg?branch=main)](https://app.travis-ci.com/zfergus/finite-diff)
+[![Build Status](https://github.com/zfergus/finite-diff/actions/workflows/continuous.yml/badge.svg)](https://github.com/zfergus/finite-diff/actions/workflows/continuous.yml)
 [![License](https://img.shields.io/github/license/zfergus/finite-diff.svg?color=blue)](https://opensource.org/licenses/MIT)
 
 A simple finite difference library.
