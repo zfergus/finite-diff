@@ -1,60 +1,94 @@
-cmake_minimum_required(VERSION 3.9)
-project(FiniteDiff)
+# Detects whether this is a top-level project
+get_directory_property(HAS_PARENT PARENT_DIRECTORY)
+if(HAS_PARENT)
+    set(FINITE_DIFF_TOPLEVEL_PROJECT OFF)
+else()
+    set(FINITE_DIFF_TOPLEVEL_PROJECT ON)
+endif()
+
+# Check required CMake version
+set(REQUIRED_CMAKE_VERSION "3.14.0")
+if(FINITE_DIFF_TOPLEVEL_PROJECT)
+    cmake_minimum_required(VERSION ${REQUIRED_CMAKE_VERSION})
+else()
+    # Don't use cmake_minimum_required here to avoid implicitly overriding parent policies
+    if(${CMAKE_VERSION} VERSION_LESS ${REQUIRED_CMAKE_VERSION})
+        message(FATAL_ERROR "CMake required version to build finite-diff is ${REQUIRED_CMAKE_VERSION}")
+    endif()
+endif()
 
 ################################################################################
 
-# project-options
-option(FINITE_DIFF_BUILD_UNIT_TESTS         "Build unit-tests"      OFF)
+project(FiniteDiff
+        DESCRIPTION "A simple finite difference library."
+        LANGUAGES CXX)
+
+option(FINITE_DIFF_BUILD_UNIT_TESTS  "Build unit-tests"  ${FINITE_DIFF_TOPLEVEL_PROJECT})
+
+# Set default minimum C++ standard
+if(FINITE_DIFF_TOPLEVEL_PROJECT)
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
+
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/finitediff/")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/recipes/")
 
 ################################################################################
-
-### Configuration
-set(FINITE_DIFF_EXTERNAL "${CMAKE_CURRENT_SOURCE_DIR}/external")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-
-include(Warnings)
-include(${PROJECT_NAME}Dependencies)
-
-################################################################################
-# FiniteDiff Library
+# Finite Diff Library
 ################################################################################
 
-add_library(${PROJECT_NAME} "finitediff.cpp")
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/)
+add_library(finitediff_finitediff
+    src/finitediff.cpp
+)
+add_library(finitediff::finitediff ALIAS finitediff_finitediff)
+
+# Public include directory
+target_include_directories(finitediff_finitediff PUBLIC src)
 
 ################################################################################
-# Required Libraries
+# Optional Definitions
 ################################################################################
 
-# Eigen
-target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen)
+# For MSVC, do not use the min and max macros.
+target_compile_definitions(finitediff_finitediff PUBLIC NOMINMAX)
 
-# Logger
-target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
+################################################################################
+# Dependencies
+################################################################################
 
 # Extra warnings
-target_link_libraries(${PROJECT_NAME} PRIVATE warnings::all)
+include(finitediff_warnings)
+target_link_libraries(finitediff_finitediff PRIVATE finitediff::warnings)
+
+# Eigen
+include(eigen)
+target_link_libraries(finitediff_finitediff PUBLIC Eigen3::Eigen)
+
+# Logger
+include(spdlog)
+target_link_libraries(finitediff_finitediff PUBLIC spdlog::spdlog)
 
 ################################################################################
 # Compiler options
 ################################################################################
 
 # Use C++11
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+target_compile_features(finitediff_finitediff PUBLIC cxx_std_11)
 
 ################################################################################
 # Tests
 ################################################################################
 
 if(FINITE_DIFF_BUILD_UNIT_TESTS)
-    # Catch2
-    if(NOT TARGET Catch2::Catch2)
-        finite_diff_download_catch2()
-        add_subdirectory(${FINITE_DIFF_EXTERNAL}/Catch2 catch2)
-        list(APPEND CMAKE_MODULE_PATH ${FINITE_DIFF_EXTERNAL}/Catch2/contrib)
-    endif()
-
     include(CTest)
     enable_testing()
+
+    # Include Catch2 and provide function `catch_discover_tests` to register tests.
+    include(catch2)
+    FetchContent_GetProperties(catch2)
+    include("${catch2_SOURCE_DIR}/contrib/Catch.cmake")
+
     add_subdirectory(tests)
 endif()

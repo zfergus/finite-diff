@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.1)
+################################################################################
+# Tests
 ################################################################################
 
-add_executable(${PROJECT_NAME}_tests
+add_executable(finitediff_tests
   main.cpp
 
   test_gradient.cpp
@@ -9,10 +10,27 @@ add_executable(${PROJECT_NAME}_tests
   test_hessian.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}_tests PUBLIC ${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME}_tests PUBLIC Catch2::Catch2 warnings::all)
+################################################################################
+# Required Libraries
+################################################################################
+
+target_link_libraries(finitediff_tests PUBLIC finitediff::finitediff)
+
+include(finitediff_warnings)
+target_link_libraries(finitediff_tests PRIVATE finitediff::warnings)
+
+include(catch2)
+target_link_libraries(finitediff_tests PUBLIC Catch2::Catch2)
+
+################################################################################
+# Compiler options
+################################################################################
 
 # target_compile_definitions(${PROJECT_NAME}_tests PUBLIC CATCH_CONFIG_ENABLE_BENCHMARKING)
+
+################################################################################
+# Register tests
+################################################################################
 
 foreach(source IN ITEMS ${test_sources})
    source_group("tests" FILES "${source}")
@@ -20,5 +38,4 @@ endforeach()
 
 # Register tests
 set(PARSE_CATCH_TESTS_ADD_TO_CONFIGURE_DEPENDS ON)
-include(Catch)
-catch_discover_tests(${PROJECT_NAME}_tests)
+catch_discover_tests(finitediff_tests)
