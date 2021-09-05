@@ -122,7 +122,7 @@ jobs:
           cmake -G Ninja ^
             -DCMAKE_CXX_COMPILER_LAUNCHER=sccache ^
             -DCMAKE_BUILD_TYPE=${{ matrix.config }} ^
-            -DIPC_TOOLKIT_BUILD_UNIT_TESTS=ON ^
+            -DFINITE_DIFF_BUILD_UNIT_TESTS=ON ^
             -B build ^
             -S .
           cmake --build build
