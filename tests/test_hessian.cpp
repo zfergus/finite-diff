@@ -4,9 +4,14 @@
 #include <catch2/catch.hpp>
 
 #include <finitediff.hpp>
+#include <spdlog/spdlog.h>
+
+using namespace fd;
 
 TEST_CASE("Test finite difference hessian of quadratic", "[hessian]")
 {
+    AccuracyOrder accuracy = GENERATE(SECOND, FOURTH, SIXTH, EIGHTH);
+
     int n = GENERATE(1, 2, 4, 10, 25);
 
     // f(x) = xᵀAx + bᵀx
@@ -22,14 +27,15 @@ TEST_CASE("Test finite difference hessian of quadratic", "[hessian]")
     Eigen::MatrixXd hess = A + A.transpose();
 
     Eigen::MatrixXd fhess;
-    fd::finite_hessian(x, f, fhess);
+    finite_hessian(x, f, fhess, accuracy);
 
     CAPTURE(n);
-    CHECK(fd::compare_hessian(hess, fhess));
+    CHECK(compare_hessian(hess, fhess));
 }
 
 TEST_CASE("Test finite difference hessian of Rosenbrock", "[hessian]")
 {
+    AccuracyOrder accuracy = GENERATE(SECOND, FOURTH, SIXTH, EIGHTH);
     const auto f = [](const Eigen::VectorXd x) {
         double t1 = 1 - x[0];
         double t2 = (x[1] - x[0] * x[0]);
@@ -45,13 +51,14 @@ TEST_CASE("Test finite difference hessian of Rosenbrock", "[hessian]")
     hess(1, 1) = 200;
 
     Eigen::MatrixXd fhess;
-    fd::finite_hessian(x, f, fhess);
+    finite_hessian(x, f, fhess, accuracy);
 
-    CHECK(fd::compare_hessian(hess, fhess));
+    CHECK(compare_hessian(hess, fhess));
 }
 
 TEST_CASE("Test finite difference hessian of trig", "[hessian]")
 {
+    AccuracyOrder accuracy = GENERATE(SECOND, FOURTH, SIXTH, EIGHTH);
     int n = GENERATE(1, 2, 4, 10, 25);
 
     const auto f = [&](const Eigen::VectorXd x) -> double {
@@ -65,7 +72,7 @@ TEST_CASE("Test finite difference hessian of trig", "[hessian]")
     hess.diagonal() = 2 * (cos_x * cos_x) - 2 * (sin_x * sin_x);
 
     Eigen::MatrixXd fhess;
-    fd::finite_hessian(x, f, fhess);
+    finite_hessian(x, f, fhess, accuracy);
 
-    CHECK(fd::compare_hessian(hess, fhess));
+    CHECK(compare_hessian(hess, fhess));
 }

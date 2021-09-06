@@ -10,6 +10,59 @@
 
 namespace fd {
 
+// The external coefficients, c1, in c1 * f(x + c2).
+// See: https://en.wikipedia.org/wiki/Finite_difference_coefficient
+std::vector<double> get_external_coeffs(const AccuracyOrder accuracy)
+{
+    switch (accuracy) {
+    case SECOND:
+        return { { 1, -1 } };
+    case FOURTH:
+        return { { 1, -8, 8, -1 } };
+    case SIXTH:
+        return { { -1, 9, -45, 45, -9, 1 } };
+    case EIGHTH:
+        return { { 3, -32, 168, -672, 672, -168, 32, -3 } };
+    default:
+        throw std::invalid_argument("invalid accuracy order");
+    }
+}
+
+// The internal coefficients, c2, in c1 * f(x + c2).
+// See: https://en.wikipedia.org/wiki/Finite_difference_coefficient
+std::vector<double> get_interior_coeffs(const AccuracyOrder accuracy)
+{
+    switch (accuracy) {
+    case SECOND:
+        return { { 1, -1 } };
+    case FOURTH:
+        return { { -2, -1, 1, 2 } };
+    case SIXTH:
+        return { { -3, -2, -1, 1, 2, 3 } };
+    case EIGHTH:
+        return { { -4, -3, -2, -1, 1, 2, 3, 4 } };
+    default:
+        throw std::invalid_argument("invalid accuracy order");
+    }
+}
+
+// The denominators of the finite difference.
+double get_denominator(const AccuracyOrder accuracy)
+{
+    switch (accuracy) {
+    case SECOND:
+        return 2;
+    case FOURTH:
+        return 12;
+    case SIXTH:
+        return 60;
+    case EIGHTH:
+        return 840;
+    default:
+        throw std::invalid_argument("invalid accuracy order");
+    }
+}
+
 // Compute the gradient of a function at a point using finite differences.
 void finite_gradient(
     const Eigen::VectorXd& x,
@@ -18,33 +71,24 @@ void finite_gradient(
     const AccuracyOrder accuracy,
     const double eps)
 {
-    // Create an array of the coefficients for finite differences.
-    // See: https://en.wikipedia.org/wiki/Finite_difference_coefficient
-    // clang-format off
-    // The external coefficients, c1, in c1 * f(x + c2).
-    static const std::array<std::vector<double>, 4> coeff =
-    { { {1, -1}, {1, -8, 8, -1}, {-1, 9, -45, 45, -9, 1}, {3, -32, 168, -672, 672, -168, 32, -3} } };
-    // The internal coefficients, c2, in c1 * f(x + c2).
-    static const std::array<std::vector<double>, 4> coeff2 =
-    { { {1, -1}, {-2, -1, 1, 2}, {-3, -2, -1, 1, 2, 3}, {-4, -3, -2, -1, 1, 2, 3, 4} } };
-    // clang-format on
-    // The denominators of the finite difference.
-    static const std::array<double, 4> dd = { { 2, 12, 60, 840 } };
+    const std::vector<double> external_coeffs = get_external_coeffs(accuracy);
+    const std::vector<double> internal_coeffs = get_interior_coeffs(accuracy);
 
-    grad.resize(x.rows());
+    assert(external_coeffs.size() == internal_coeffs.size());
+    const size_t inner_steps = internal_coeffs.size();
 
-    const size_t innerSteps = 2 * (accuracy + 1);
-    const double ddVal = dd[accuracy] * eps;
+    const double denom = get_denominator(accuracy) * eps;
 
-    Eigen::VectorXd xx = x;
-    for (long d = 0; d < x.rows(); d++) {
-        grad[d] = 0;
-        for (size_t s = 0; s < innerSteps; ++s) {
-            xx[d] += coeff2[accuracy][s] * eps;
-            grad[d] += coeff[accuracy][s] * f(xx);
-            xx[d] = x[d];
+    grad.setZero(x.rows());
+
+    Eigen::VectorXd x_mutable = x;
+    for (size_t i = 0; i < x.rows(); i++) {
+        for (size_t ci = 0; ci < inner_steps; ci++) {
+            x_mutable[i] += internal_coeffs[ci] * eps;
+            grad[i] += external_coeffs[ci] * f(x_mutable);
+            x_mutable[i] = x[i];
         }
-        grad[d] /= ddVal;
+        grad[i] /= denom;
     }
 }
 
@@ -55,33 +99,24 @@ void finite_jacobian(
     const AccuracyOrder accuracy,
     const double eps)
 {
-    // Create an array of the coefficients for finite differences.
-    // See: https://en.wikipedia.org/wiki/Finite_difference_coefficient
-    // clang-format off
-    // The external coefficients, c1, in c1 * f(x + c2).
-    static const std::array<std::vector<double>, 4> coeff =
-    { { {1, -1}, {1, -8, 8, -1}, {-1, 9, -45, 45, -9, 1}, {3, -32, 168, -672, 672, -168, 32, -3} } };
-    // The internal coefficients, c2, in c1 * f(x + c2).
-    static const std::array<std::vector<double>, 4> coeff2 =
-    { { {1, -1}, {-2, -1, 1, 2}, {-3, -2, -1, 1, 2, 3}, {-4, -3, -2, -1, 1, 2, 3, 4} } };
-    // clang-format on
-    // The denominators of the finite difference.
-    static const std::array<double, 4> dd = { { 2, 12, 60, 840 } };
+    const std::vector<double> external_coeffs = get_external_coeffs(accuracy);
+    const std::vector<double> internal_coeffs = get_interior_coeffs(accuracy);
 
-    jac.resize(f(x).rows(), x.rows());
+    assert(external_coeffs.size() == internal_coeffs.size());
+    const size_t inner_steps = internal_coeffs.size();
 
-    const size_t innerSteps = 2 * (accuracy + 1);
-    const double ddVal = dd[accuracy] * eps;
+    const double denom = get_denominator(accuracy) * eps;
 
-    Eigen::VectorXd xx = x;
-    for (long d = 0; d < x.rows(); d++) {
-        jac.col(d).setZero();
-        for (size_t s = 0; s < innerSteps; ++s) {
-            xx[d] += coeff2[accuracy][s] * eps;
-            jac.col(d) += coeff[accuracy][s] * f(xx);
-            xx[d] = x[d];
+    jac.setZero(f(x).rows(), x.rows());
+
+    Eigen::VectorXd x_mutable = x;
+    for (size_t i = 0; i < x.rows(); i++) {
+        for (size_t ci = 0; ci < inner_steps; ci++) {
+            x_mutable[i] += internal_coeffs[ci] * eps;
+            jac.col(i) += external_coeffs[ci] * f(x_mutable);
+            x_mutable[i] = x[i];
         }
-        jac.col(d) /= ddVal;
+        jac.col(i) /= denom;
     }
 }
 
@@ -89,27 +124,35 @@ void finite_hessian(
     const Eigen::VectorXd& x,
     const std::function<double(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& hess,
-    // const AccuracyOrder accuracy,
+    const AccuracyOrder accuracy,
     const double eps)
 {
-    hess.resize(x.rows(), x.rows());
+    const std::vector<double> external_coeffs = get_external_coeffs(accuracy);
+    const std::vector<double> internal_coeffs = get_interior_coeffs(accuracy);
 
-    Eigen::VectorXd xx = x;
-    for (long i = 0; i < x.rows(); i++) {
-        for (long j = 0; j < x.rows(); j++) {
-            double f4 = f(xx);
-            xx[i] += eps;
-            xx[j] += eps;
-            double f1 = f(xx);
-            xx[j] -= eps;
-            double f2 = f(xx);
-            xx[j] += eps;
-            xx[i] -= eps;
-            double f3 = f(xx);
-            hess(i, j) = (f1 - f2 - f3 + f4) / (eps * eps);
+    assert(external_coeffs.size() == internal_coeffs.size());
+    const size_t inner_steps = internal_coeffs.size();
 
-            xx[i] = x[i];
-            xx[j] = x[j];
+    double denom = get_denominator(accuracy) * eps;
+    denom *= denom;
+
+    hess.setZero(x.rows(), x.rows());
+
+    Eigen::VectorXd x_mutable = x;
+    for (size_t i = 0; i < x.rows(); i++) {
+        for (size_t j = i; j < x.rows(); j++) {
+            for (size_t ci = 0; ci < inner_steps; ci++) {
+                for (size_t cj = 0; cj < inner_steps; cj++) {
+                    x_mutable[i] += internal_coeffs[ci] * eps;
+                    x_mutable[j] += internal_coeffs[cj] * eps;
+                    hess(i, j) += external_coeffs[ci] * external_coeffs[cj]
+                        * f(x_mutable);
+                    x_mutable[j] = x[j];
+                    x_mutable[i] = x[i];
+                }
+            }
+            hess(i, j) /= denom;
+            hess(j, i) = hess(i, j); // The hessian is symmetric
         }
     }
 }
@@ -124,16 +167,16 @@ bool compare_gradient(
     assert(x.rows() == y.rows());
 
     bool same = true;
-    for (long d = 0; d < x.rows(); ++d) {
-        double scale = std::max(std::max(abs(x[d]), abs(y[d])), double(1.0));
-        double abs_diff = abs(x[d] - y[d]);
+    for (long i = 0; i < x.rows(); i++) {
+        double scale = std::max(std::max(abs(x[i]), abs(y[i])), double(1.0));
+        double abs_diff = abs(x[i] - y[i]);
 
         if (abs_diff > test_eps * scale) {
             spdlog::debug(
                 "{} eps={:.3e} r={} x={:.3e} y={:.3e} |x-y|={:.3e} "
                 "|x-y|/|x|={:.3e} |x-y|/|y|={:3e}",
-                msg, test_eps, d, x(d), y(d), abs_diff, abs_diff / abs(x(d)),
-                abs_diff / abs(y(d)));
+                msg, test_eps, i, x(i), y(i), abs_diff, abs_diff / abs(x(i)),
+                abs_diff / abs(y(i)));
             same = false;
         }
     }
@@ -151,19 +194,19 @@ bool compare_jacobian(
     assert(x.cols() == y.cols());
 
     bool same = true;
-    for (long d = 0; d < x.rows(); ++d) {
-        for (long c = 0; c < x.cols(); ++c) {
+    for (long i = 0; i < x.rows(); i++) {
+        for (long j = 0; j < x.cols(); j++) {
             double scale =
-                std::max(std::max(abs(x(d, c)), abs(y(d, c))), double(1.0));
+                std::max(std::max(abs(x(i, j)), abs(y(i, j))), double(1.0));
 
-            double abs_diff = abs(x(d, c) - y(d, c));
+            double abs_diff = abs(x(i, j) - y(i, j));
 
             if (abs_diff > test_eps * scale) {
                 spdlog::debug(
                     "{} eps={:.3e} r={} c={} x={:.3e} y={:.3e} "
                     "|x-y|={:.3e} |x-y|/|x|={:.3e} |x-y|/|y|={:3e}",
-                    msg, test_eps, d, c, x(d, c), y(d, c), abs_diff,
-                    abs_diff / abs(x(d, c)), abs_diff / abs(y(d, c)));
+                    msg, test_eps, i, j, x(i, j), y(i, j), abs_diff,
+                    abs_diff / abs(x(i, j)), abs_diff / abs(y(i, j)));
                 same = false;
             }
         }

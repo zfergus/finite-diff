@@ -5,6 +5,8 @@
 
 #include <finitediff.hpp>
 
+using namespace fd;
+
 TEST_CASE("Test finite difference jacobian of linear", "[jacobian]")
 {
     int n = GENERATE(1, 2, 4, 10, 100);
@@ -20,12 +22,12 @@ TEST_CASE("Test finite difference jacobian of linear", "[jacobian]")
 
     Eigen::MatrixXd jac = A;
 
-    fd::AccuracyOrder accuracy = fd::AccuracyOrder(GENERATE(range(0, 4)));
+    AccuracyOrder accuracy = GENERATE(SECOND, FOURTH, SIXTH, EIGHTH);
 
     Eigen::MatrixXd fjac;
-    fd::finite_jacobian(x, f, fjac, accuracy);
+    finite_jacobian(x, f, fjac, accuracy);
 
-    CHECK(fd::compare_jacobian(jac, fjac));
+    CHECK(compare_jacobian(jac, fjac));
 }
 
 TEST_CASE("Test finite difference jacobian of trig", "[jacobian]")
@@ -40,10 +42,10 @@ TEST_CASE("Test finite difference jacobian of trig", "[jacobian]")
 
     Eigen::MatrixXd jac = x.array().cos().matrix().asDiagonal();
 
-    fd::AccuracyOrder accuracy = fd::AccuracyOrder(GENERATE(range(0, 4)));
+    AccuracyOrder accuracy = GENERATE(SECOND, FOURTH, SIXTH, EIGHTH);
 
     Eigen::MatrixXd fjac;
-    fd::finite_jacobian(x, f, fjac, accuracy);
+    finite_jacobian(x, f, fjac, accuracy);
 
-    CHECK(fd::compare_jacobian(jac, fjac));
+    CHECK(compare_jacobian(jac, fjac));
 }

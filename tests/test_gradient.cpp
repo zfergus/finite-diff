@@ -5,6 +5,8 @@
 
 #include <finitediff.hpp>
 
+using namespace fd;
+
 TEST_CASE("Test finite difference gradient of quadratic", "[gradient]")
 {
     int n = GENERATE(1, 2, 4, 10, 100);
@@ -21,12 +23,12 @@ TEST_CASE("Test finite difference gradient of quadratic", "[gradient]")
 
     Eigen::VectorXd grad = A * x + A.transpose() * x + b;
 
-    fd::AccuracyOrder accuracy = fd::AccuracyOrder(GENERATE(range(0, 4)));
+    AccuracyOrder accuracy = GENERATE(SECOND, FOURTH, SIXTH, EIGHTH);
 
     Eigen::VectorXd fgrad;
-    fd::finite_gradient(x, f, fgrad, accuracy);
+    finite_gradient(x, f, fgrad, accuracy);
 
-    CHECK(fd::compare_gradient(grad, fgrad));
+    CHECK(compare_gradient(grad, fgrad));
 }
 
 TEST_CASE("Test finite difference gradient of Rosenbrock", "[gradient]")
@@ -47,12 +49,12 @@ TEST_CASE("Test finite difference gradient of Rosenbrock", "[gradient]")
 
     Eigen::VectorXd grad = fdiff(x);
 
-    fd::AccuracyOrder accuracy = fd::AccuracyOrder(GENERATE(range(0, 4)));
+    AccuracyOrder accuracy = GENERATE(SECOND, FOURTH, SIXTH, EIGHTH);
 
     Eigen::VectorXd fgrad;
-    fd::finite_gradient(x, f, fgrad, accuracy);
+    finite_gradient(x, f, fgrad, accuracy);
 
-    CHECK(fd::compare_gradient(grad, fgrad));
+    CHECK(compare_gradient(grad, fgrad));
 }
 
 TEST_CASE("Test finite difference gradient of trig", "[gradient]")
@@ -67,10 +69,10 @@ TEST_CASE("Test finite difference gradient of trig", "[gradient]")
 
     Eigen::VectorXd grad = 2 * x.array().sin() * x.array().cos();
 
-    fd::AccuracyOrder accuracy = fd::AccuracyOrder(GENERATE(range(0, 4)));
+    AccuracyOrder accuracy = GENERATE(SECOND, FOURTH, SIXTH, EIGHTH);
 
     Eigen::VectorXd fgrad;
-    fd::finite_gradient(x, f, fgrad, accuracy);
+    finite_gradient(x, f, fgrad, accuracy);
 
-    CHECK(fd::compare_gradient(grad, fgrad));
+    CHECK(compare_gradient(grad, fgrad));
 }

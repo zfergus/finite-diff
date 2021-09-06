@@ -16,10 +16,10 @@ namespace fd {
  * The corresponding integer values are used internally and should be ignored.
  */
 enum AccuracyOrder {
-    SECOND = 0, ///< @brief Second order accuracy.
-    FOURTH = 1, ///< @brief Fourth order accuracy.
-    SIXTH = 2,  ///< @brief Sixth order accuracy.
-    EIGHTH = 3  ///< @brief Eighth order accuracy.
+    SECOND, ///< @brief Second order accuracy.
+    FOURTH, ///< @brief Fourth order accuracy.
+    SIXTH,  ///< @brief Sixth order accuracy.
+    EIGHTH  ///< @brief Eighth order accuracy.
 };
 
 /**
@@ -57,8 +57,6 @@ void finite_jacobian(
 /**
  * @brief Compute the hessian of a function using finite differences.
  *
- * NOTE: Only second order accurate for now.
- *
  * @param[in]  x         Point at which to compute the hessian.
  * @param[in]  f         Compute the hessian of this function.
  * @param[out] hess      Computed hessian.
@@ -69,7 +67,7 @@ void finite_hessian(
     const Eigen::VectorXd& x,
     const std::function<double(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& hess,
-    // const AccuracyOrder accuracy = SECOND,
+    const AccuracyOrder accuracy = SECOND,
     const double eps = 1.0e-5);
 
 /**
