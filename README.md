@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/zfergus/finite-diff/actions/workflows/continuous.yml/badge.svg)](https://github.com/zfergus/finite-diff/actions/workflows/continuous.yml)
 [![License](https://img.shields.io/github/license/zfergus/finite-diff.svg?color=blue)](https://opensource.org/licenses/MIT)
 
-**A simple finite difference library.**
+**A simple finite-difference library using Eigen.**
 
 ## Usage
 
