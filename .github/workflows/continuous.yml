@@ -89,8 +89,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: [Debug, Release]
         os: [windows-2019, windows-2022]
+        config: [Debug, Release]
         include:
           - os: windows-2019
             name: Windows 2019
