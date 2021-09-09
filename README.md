@@ -129,5 +129,5 @@ MIT License © 2019, Zachary Ferguson (See [`LICENSE.txt`](https://github.com/zf
 
 ### Acknowledgements
 
-Based on the functions in [CppNumericalSolvers](https://github.com/PatWie/CppNumericalSolvers)
+Based on the functions in [CppNumericalSolvers](https://github.com/PatWie/CppNumericalSolvers/blob/v2/include/cppoptlib/utils/derivatives.h)
 by Patrick Wieschollek and rewritten to use Eigen.
