@@ -8,6 +8,7 @@ add_executable(finitediff_tests
   test_gradient.cpp
   test_jacobian.cpp
   test_hessian.cpp
+  test_flatten.cpp
 )
 
 ################################################################################

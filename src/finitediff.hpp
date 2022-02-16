@@ -118,4 +118,10 @@ bool compare_hessian(
     const double test_eps = 1e-4,
     const std::string& msg = "compare_hessian ");
 
+/// @brief Flatten the matrix rowwise
+Eigen::VectorXd flatten(const Eigen::MatrixXd& X);
+
+/// @brief Unflatten rowwise
+Eigen::MatrixXd unflatten(const Eigen::VectorXd& x, int dim);
+
 } // namespace fd

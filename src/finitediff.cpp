@@ -224,4 +224,27 @@ bool compare_hessian(
     return compare_jacobian(x, y, test_eps, msg);
 }
 
+// Flatten the matrix rowwise
+Eigen::VectorXd flatten(const Eigen::MatrixXd& X)
+{
+    Eigen::VectorXd x(X.size());
+    for (int i = 0; i < X.rows(); i++) {
+        for (int j = 0; j < X.cols(); j++) {
+            x(i * X.cols() + j) = X(i, j);
+        }
+    }
+    return x;
+}
+
+// Unflatten rowwise
+Eigen::MatrixXd unflatten(const Eigen::VectorXd& x, int dim)
+{
+    assert(x.size() % dim == 0);
+    Eigen::MatrixXd X(x.size() / dim, dim);
+    for (int i = 0; i < x.size(); i++) {
+        X(i / dim, i % dim) = x(i);
+    }
+    return X;
+}
+
 } // namespace fd
