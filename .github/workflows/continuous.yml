@@ -23,16 +23,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-20.04, macos-latest]
         config: [Debug, Release]
         include:
-          - os: macos-lates
+          - os: macos-latest
             name: macOS
-          - os: ubuntu-latest
-            name: Ubunutu
+          - os: ubuntu-20.04
+            name: Linux
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
         with:
           fetch-depth: 10
 
@@ -86,16 +86,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2019, windows-2022]
         config: [Debug, Release]
-        include:
-          - os: windows-2019
-            name: Windows 2019
-          - os: windows-2022
-            name: Windows 2022
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
         with:
           fetch-depth: 10
       - uses: seanmiddleditch/gha-setup-ninja@master
@@ -115,7 +109,8 @@ jobs:
 
       - name: Prepare sccache
         run: |
-          Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
+          iwr -useb 'https://raw.githubusercontent.com/scoopinstaller/install/master/install.ps1' -outfile 'install.ps1'
+          .\install.ps1 -RunAsAdmin
           scoop install sccache --global
           # Scoop modifies the PATH so we make it available for the next steps of the job
           echo "${env:PATH}" >> ${env:GITHUB_PATH}
