@@ -88,6 +88,9 @@ jobs:
       fail-fast: false
       matrix:
         config: [Debug, Release]
+      include:
+        - os: windows-2019
+          name: Windows
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
