@@ -79,10 +79,11 @@ jobs:
 
   Windows:
     name: ${{ matrix.name }} (${{ matrix.config }})
-    runs-on: windows-latest
+    runs-on: windows-2019
     env:
       CC: cl.exe
       CXX: cl.exe
+      SCCACHE_IDLE_TIMEOUT: "12000"
     strategy:
       fail-fast: false
       matrix:
