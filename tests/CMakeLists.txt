@@ -3,8 +3,6 @@
 ################################################################################
 
 add_executable(finitediff_tests
-  main.cpp
-
   test_gradient.cpp
   test_jacobian.cpp
   test_hessian.cpp
@@ -21,7 +19,7 @@ include(finitediff_warnings)
 target_link_libraries(finitediff_tests PRIVATE finitediff::warnings)
 
 include(catch2)
-target_link_libraries(finitediff_tests PUBLIC Catch2::Catch2)
+target_link_libraries(finitediff_tests PUBLIC Catch2::Catch2WithMain)
 
 ################################################################################
 # Compiler options
@@ -33,9 +31,9 @@ target_link_libraries(finitediff_tests PUBLIC Catch2::Catch2)
 # Register tests
 ################################################################################
 
-foreach(source IN ITEMS ${test_sources})
-   source_group("tests" FILES "${source}")
-endforeach()
+FetchContent_GetProperties(catch2)
+list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
+include(Catch)
 
 # Register tests
 set(PARSE_CATCH_TESTS_ADD_TO_CONFIGURE_DEPENDS ON)

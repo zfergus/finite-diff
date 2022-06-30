@@ -1,7 +1,9 @@
 #include <iostream>
 
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators_all.hpp>
+
 #include <Eigen/Core>
-#include <catch2/catch.hpp>
 
 #include <finitediff.hpp>
 
@@ -14,7 +16,7 @@ TEST_CASE("Test finite difference jacobian of linear", "[jacobian]")
     // f(x) = Ax
     Eigen::MatrixXd A = Eigen::MatrixXd::Random(n, n);
 
-    const auto f = [&](const Eigen::VectorXd x) -> Eigen::VectorXd {
+    const auto f = [&](const Eigen::VectorXd& x) -> Eigen::VectorXd {
         return A * x;
     };
 
@@ -34,7 +36,7 @@ TEST_CASE("Test finite difference jacobian of trig", "[jacobian]")
 {
     int n = GENERATE(1, 2, 4, 10, 100);
 
-    const auto f = [&](const Eigen::VectorXd x) -> Eigen::VectorXd {
+    const auto f = [&](const Eigen::VectorXd& x) -> Eigen::VectorXd {
         return x.array().sin();
     };
 
