@@ -37,7 +37,7 @@ where `TARGET_NAME` is the name of your library/executable.
 
 All functiononality can be included with `#include <finitediff.hpp>`.
 
-The library provides three main function `finite_gradient`, `finite_jacobian`, and `finite_hessian`.
+The library provides three main functions `finite_gradient`, `finite_jacobian`, and `finite_hessian`.
 
 #### `finite_gradient`:
 
@@ -93,11 +93,11 @@ enum AccuracyOrder {
 
 #### `eps`:
 
-The parameter `eps` is the finite difference step size. Smaller values result in a more accuracate approximation, but too small of a value can result in large numerical error because the difference will be divided by a small number.
+The parameter `eps` is the finite difference step size. Smaller values result in a more accurate approximation, but too small of a value can result in a large numerical error because the difference will be divided by a small number.
 
 ## Dependencies
 
-**All dependancies are downloaded through CMake** depending on the build options.
+**All dependencies are downloaded through CMake** depending on the build options.
 The following libraries are used in this project:
 
 * [Eigen](https://eigen.tuxfamily.org/): linear algebra
@@ -110,13 +110,13 @@ The following libraries are used in this project:
 ## <a name="unit_tests"></a>Unit Tests
 
 We provide unit tests for ensuring the correctness of our functions.
-To enable the unit tests use the flag `-DFINITE_DIFF_BUILD_UNIT_TESTS=ON` with CMake.
+To enable the unit tests, use the flag `-DFINITE_DIFF_BUILD_UNIT_TESTS=ON` with CMake.
 
 ## Contributing
 
-This project is open for contributors! Contibutions can come in the form of feature requests, bug fixes, documentation, tutorials and the like. We highly recommend to file an Issue first before submitting a Pull Request.
+This project is open to contributors! Contributions can come in the form of feature requests, bug fixes, documentation, tutorials and the like. We highly recommend filing an Issue first before submitting a Pull Request.
 
-Simply fork this repository and make a Pull Request! We'd definitely appreciate:
+Simply fork this repository and make a Pull Request! We'd appreciate:
 
 * Implementation of new features
 * Bug Reports
