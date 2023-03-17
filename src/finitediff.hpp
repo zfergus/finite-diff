@@ -32,7 +32,7 @@ enum AccuracyOrder {
  * @param[in]  eps       Value of the finite difference step.
  */
 void finite_gradient(
-    const Eigen::VectorXd& x,
+    const Eigen::Ref<const Eigen::VectorXd>& x,
     const std::function<double(const Eigen::VectorXd&)>& f,
     Eigen::VectorXd& grad,
     const AccuracyOrder accuracy = SECOND,
@@ -48,7 +48,7 @@ void finite_gradient(
  * @param[in]  eps       Value of the finite difference step.
  */
 void finite_jacobian(
-    const Eigen::VectorXd& x,
+    const Eigen::Ref<const Eigen::VectorXd>& x,
     const std::function<Eigen::VectorXd(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& jac,
     const AccuracyOrder accuracy = SECOND,
@@ -64,7 +64,7 @@ void finite_jacobian(
  * @param[in]  eps       Value of the finite difference step.
  */
 void finite_hessian(
-    const Eigen::VectorXd& x,
+    const Eigen::Ref<const Eigen::VectorXd>& x,
     const std::function<double(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& hess,
     const AccuracyOrder accuracy = SECOND,
@@ -81,8 +81,8 @@ void finite_hessian(
  * @return A boolean for if x and y are close to the same value.
  */
 bool compare_gradient(
-    const Eigen::VectorXd& x,
-    const Eigen::VectorXd& y,
+    const Eigen::Ref<const Eigen::VectorXd>& x,
+    const Eigen::Ref<const Eigen::VectorXd>& y,
     const double test_eps = 1e-4,
     const std::string& msg = "compare_gradient ");
 
@@ -97,8 +97,8 @@ bool compare_gradient(
  * @return A boolean for if x and y are close to the same value.
  */
 bool compare_jacobian(
-    const Eigen::MatrixXd& x,
-    const Eigen::MatrixXd& y,
+    const Eigen::Ref<const Eigen::MatrixXd>& x,
+    const Eigen::Ref<const Eigen::MatrixXd>& y,
     const double test_eps = 1e-4,
     const std::string& msg = "compare_jacobian ");
 
@@ -113,15 +113,15 @@ bool compare_jacobian(
  * @return A boolean for if x and y are close to the same value.
  */
 bool compare_hessian(
-    const Eigen::MatrixXd& x,
-    const Eigen::MatrixXd& y,
+    const Eigen::Ref<const Eigen::MatrixXd>& x,
+    const Eigen::Ref<const Eigen::MatrixXd>& y,
     const double test_eps = 1e-4,
     const std::string& msg = "compare_hessian ");
 
 /// @brief Flatten the matrix rowwise
-Eigen::VectorXd flatten(const Eigen::MatrixXd& X);
+Eigen::VectorXd flatten(const Eigen::Ref<const Eigen::MatrixXd>& X);
 
 /// @brief Unflatten rowwise
-Eigen::MatrixXd unflatten(const Eigen::VectorXd& x, int dim);
+Eigen::MatrixXd unflatten(const Eigen::Ref<const Eigen::VectorXd>& x, int dim);
 
 } // namespace fd

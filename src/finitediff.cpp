@@ -65,7 +65,7 @@ double get_denominator(const AccuracyOrder accuracy)
 
 // Compute the gradient of a function at a point using finite differences.
 void finite_gradient(
-    const Eigen::VectorXd& x,
+    const Eigen::Ref<const Eigen::VectorXd>& x,
     const std::function<double(const Eigen::VectorXd&)>& f,
     Eigen::VectorXd& grad,
     const AccuracyOrder accuracy,
@@ -93,7 +93,7 @@ void finite_gradient(
 }
 
 void finite_jacobian(
-    const Eigen::VectorXd& x,
+    const Eigen::Ref<const Eigen::VectorXd>& x,
     const std::function<Eigen::VectorXd(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& jac,
     const AccuracyOrder accuracy,
@@ -121,7 +121,7 @@ void finite_jacobian(
 }
 
 void finite_hessian(
-    const Eigen::VectorXd& x,
+    const Eigen::Ref<const Eigen::VectorXd>& x,
     const std::function<double(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& hess,
     const AccuracyOrder accuracy,
@@ -159,8 +159,8 @@ void finite_hessian(
 
 // Compare if two gradients are close enough.
 bool compare_gradient(
-    const Eigen::VectorXd& x,
-    const Eigen::VectorXd& y,
+    const Eigen::Ref<const Eigen::VectorXd>& x,
+    const Eigen::Ref<const Eigen::VectorXd>& y,
     const double test_eps,
     const std::string& msg)
 {
@@ -185,8 +185,8 @@ bool compare_gradient(
 
 // Compare if two jacobians are close enough.
 bool compare_jacobian(
-    const Eigen::MatrixXd& x,
-    const Eigen::MatrixXd& y,
+    const Eigen::Ref<const Eigen::MatrixXd>& x,
+    const Eigen::Ref<const Eigen::MatrixXd>& y,
     const double test_eps,
     const std::string& msg)
 {
@@ -216,8 +216,8 @@ bool compare_jacobian(
 
 // Compare if two hessians are close enough.
 bool compare_hessian(
-    const Eigen::MatrixXd& x,
-    const Eigen::MatrixXd& y,
+    const Eigen::Ref<const Eigen::MatrixXd>& x,
+    const Eigen::Ref<const Eigen::MatrixXd>& y,
     const double test_eps,
     const std::string& msg)
 {
@@ -225,7 +225,7 @@ bool compare_hessian(
 }
 
 // Flatten the matrix rowwise
-Eigen::VectorXd flatten(const Eigen::MatrixXd& X)
+Eigen::VectorXd flatten(const Eigen::Ref<const Eigen::MatrixXd>& X)
 {
     Eigen::VectorXd x(X.size());
     for (int i = 0; i < X.rows(); i++) {
@@ -237,7 +237,7 @@ Eigen::VectorXd flatten(const Eigen::MatrixXd& X)
 }
 
 // Unflatten rowwise
-Eigen::MatrixXd unflatten(const Eigen::VectorXd& x, int dim)
+Eigen::MatrixXd unflatten(const Eigen::Ref<const Eigen::VectorXd>& x, int dim)
 {
     assert(x.size() % dim == 0);
     Eigen::MatrixXd X(x.size() / dim, dim);
