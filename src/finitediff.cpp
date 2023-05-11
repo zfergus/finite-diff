@@ -168,15 +168,16 @@ bool compare_gradient(
 
     bool same = true;
     for (long i = 0; i < x.rows(); i++) {
-        double scale = std::max(std::max(abs(x[i]), abs(y[i])), double(1.0));
-        double abs_diff = abs(x[i] - y[i]);
+        double scale =
+            std::max(std::max(std::abs(x[i]), std::abs(y[i])), double(1.0));
+        double abs_diff = std::abs(x[i] - y[i]);
 
         if (abs_diff > test_eps * scale) {
             spdlog::debug(
                 "{} eps={:.3e} r={} x={:.3e} y={:.3e} |x-y|={:.3e} "
                 "|x-y|/|x|={:.3e} |x-y|/|y|={:3e}",
                 msg, test_eps, i, x(i), y(i), abs_diff, abs_diff / abs(x(i)),
-                abs_diff / abs(y(i)));
+                abs_diff / std::abs(y(i)));
             same = false;
         }
     }
@@ -196,17 +197,17 @@ bool compare_jacobian(
     bool same = true;
     for (long i = 0; i < x.rows(); i++) {
         for (long j = 0; j < x.cols(); j++) {
-            double scale =
-                std::max(std::max(abs(x(i, j)), abs(y(i, j))), double(1.0));
+            double scale = std::max(
+                std::max(std::abs(x(i, j)), std::abs(y(i, j))), double(1.0));
 
-            double abs_diff = abs(x(i, j) - y(i, j));
+            double abs_diff = std::abs(x(i, j) - y(i, j));
 
             if (abs_diff > test_eps * scale) {
                 spdlog::debug(
                     "{} eps={:.3e} r={} c={} x={:.3e} y={:.3e} "
                     "|x-y|={:.3e} |x-y|/|x|={:.3e} |x-y|/|y|={:3e}",
                     msg, test_eps, i, j, x(i, j), y(i, j), abs_diff,
-                    abs_diff / abs(x(i, j)), abs_diff / abs(y(i, j)));
+                    abs_diff / std::abs(x(i, j)), abs_diff / std::abs(y(i, j)));
                 same = false;
             }
         }
