@@ -35,6 +35,8 @@ endif()
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/finitediff/")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/recipes/")
 
+include(finitediff_cpm_cache)
+
 ################################################################################
 # Finite Diff Library
 ################################################################################

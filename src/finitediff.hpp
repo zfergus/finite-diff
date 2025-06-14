@@ -39,27 +39,27 @@ void finite_gradient(
     const double eps = 1.0e-8);
 
 /**
- * @brief Compute the jacobian of a function using finite differences.
+ * @brief Compute the Jacobian of a function using finite differences.
  *
- * @param[in]  x         Point at which to compute the jacobian.
- * @param[in]  f         Compute the jacobian of this function.
- * @param[out] jac       Computed jacobian.
+ * @param[in]  x         Point at which to compute the Jacobian.
+ * @param[in]  f         Compute the Jacobian of this function.
+ * @param[out] jac       Computed Jacobian.
  * @param[in]  accuracy  Accuracy of the finite differences.
  * @param[in]  eps       Value of the finite difference step.
  */
 void finite_jacobian(
     const Eigen::Ref<const Eigen::VectorXd>& x,
-    const std::function<Eigen::VectorXd(const Eigen::VectorXd&)>& f,
+    const std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& jac,
     const AccuracyOrder accuracy = SECOND,
     const double eps = 1.0e-8);
 
 /**
- * @brief Compute the hessian of a function using finite differences.
+ * @brief Compute the Hessian of a function using finite differences.
  *
- * @param[in]  x         Point at which to compute the hessian.
- * @param[in]  f         Compute the hessian of this function.
- * @param[out] hess      Computed hessian.
+ * @param[in]  x         Point at which to compute the Hessian.
+ * @param[in]  f         Compute the Hessian of this function.
+ * @param[out] hess      Computed Hessian.
  * @param[in]  accuracy  Accuracy of the finite differences.
  * @param[in]  eps       Value of the finite difference step.
  */
@@ -87,10 +87,10 @@ bool compare_gradient(
     const std::string& msg = "compare_gradient ");
 
 /**
- * @brief Compare if two jacobians are close enough.
+ * @brief Compare if two Jacobians are close enough.
  *
- * @param[in] x         The first jacobian to compare.
- * @param[in] y         The second jacobian to compare against.
+ * @param[in] x         The first Jacobian to compare.
+ * @param[in] y         The second Jacobian to compare against.
  * @param[in] test_eps  Tolerance of equality.
  * @param[in] msg       Debug message header.
  *
@@ -103,10 +103,10 @@ bool compare_jacobian(
     const std::string& msg = "compare_jacobian ");
 
 /**
- * @brief Compare if two hessians are close enough.
+ * @brief Compare if two Hessians are close enough.
  *
- * @param[in] x         The first hessian to compare.
- * @param[in] y         The second hessian to compare against.
+ * @param[in] x         The first Hessian to compare.
+ * @param[in] y         The second Hessian to compare against.
  * @param[in] test_eps  Tolerance of equality.
  * @param[in] msg       Debug message header.
  *

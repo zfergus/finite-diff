@@ -94,7 +94,7 @@ void finite_gradient(
 
 void finite_jacobian(
     const Eigen::Ref<const Eigen::VectorXd>& x,
-    const std::function<Eigen::VectorXd(const Eigen::VectorXd&)>& f,
+    const std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& jac,
     const AccuracyOrder accuracy,
     const double eps)
@@ -107,16 +107,24 @@ void finite_jacobian(
 
     const double denom = get_denominator(accuracy) * eps;
 
-    jac.setZero(f(x).rows(), x.rows());
+    // Call f once to get the size of the Jacobian
+    size_t f_rows, f_cols;
+    {
+        const Eigen::MatrixXd tmp = f(x);
+        f_rows = tmp.rows(), f_cols = tmp.cols();
+    }
+    jac.setZero(f_rows, f_cols * x.size());
 
+    // f: ℝ^n ↦ ℝ^{p×q} ⟹ ∇f: ℝ^n ↦ ℝ^{p×(qn)}
     Eigen::VectorXd x_mutable = x;
-    for (size_t i = 0; i < x.rows(); i++) {
+    for (size_t i = 0; i < x.size(); i++) {
         for (size_t ci = 0; ci < inner_steps; ci++) {
             x_mutable[i] += internal_coeffs[ci] * eps;
-            jac.col(i) += external_coeffs[ci] * f(x_mutable);
+            jac.middleCols(f_cols * i, f_cols) +=
+                external_coeffs[ci] * f(x_mutable);
             x_mutable[i] = x[i];
         }
-        jac.col(i) /= denom;
+        jac.middleCols(f_cols * i, f_cols) /= denom;
     }
 }
 

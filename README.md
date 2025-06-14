@@ -43,7 +43,7 @@ The library provides three main functions `finite_gradient`, `finite_jacobian`, 
 
 ```c++
 void finite_gradient(
-    const Eigen::VectorXd& x,
+    const Eigen::Ref<const Eigen::VectorXd>& x,
     const std::function<double(const Eigen::VectorXd&)>& f,
     Eigen::VectorXd& grad,
     const AccuracyOrder accuracy = SECOND,
@@ -56,8 +56,8 @@ The `finite_gradient` function computes the [gradient](https://en.wikipedia.org/
 
 ```c++
 void finite_jacobian(
-    const Eigen::VectorXd& x,
-    const std::function<Eigen::VectorXd(const Eigen::VectorXd&)>& f,
+    const Eigen::Ref<const Eigen::VectorXd>& x,
+    const std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& jac,
     const AccuracyOrder accuracy = SECOND,
     const double eps = 1.0e-8);
@@ -70,7 +70,7 @@ The `finite_jacobian` function computes the [Jacobian](https://en.wikipedia.org/
 
 ```c++
 void finite_hessian(
-    const Eigen::VectorXd& x,
+    const Eigen::Ref<const Eigen::VectorXd>& x,
     const std::function<double(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& hess,
     const AccuracyOrder accuracy = SECOND,
