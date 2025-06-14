@@ -6,12 +6,12 @@ endif()
 
 message(STATUS "Third-party: creating target 'Catch2::Catch2'")
 
-option(CATCH_CONFIG_CPP17_STRING_VIEW "Enable support for std::string_view" ON)
+option(CATCH_CONFIG_CPP17_STRING_VIEW "Enable support for std::string_view" OFF)
 option(CATCH_INSTALL_DOCS "Install documentation alongside library" OFF)
 option(CATCH_INSTALL_EXTRAS "Install extras alongside library" OFF)
 
 include(CPM)
-CPMAddPackage("gh:catchorg/Catch2@3.0.1")
+CPMAddPackage("gh:catchorg/Catch2@3.8.1")
 
 # Folder name for IDE
 set_target_properties(Catch2 PROPERTIES FOLDER "ThirdParty/Catch2")
