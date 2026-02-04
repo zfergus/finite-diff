@@ -92,6 +92,7 @@ void finite_gradient(
     }
 }
 
+template <bool IsTensorOrderEven>
 void finite_jacobian(
     const Eigen::Ref<const Eigen::VectorXd>& x,
     const std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>& f,
@@ -113,18 +114,30 @@ void finite_jacobian(
         const Eigen::MatrixXd tmp = f(x);
         f_rows = tmp.rows(), f_cols = tmp.cols();
     }
-    jac.setZero(f_rows, f_cols * x.size());
+    if constexpr (IsTensorOrderEven) {
+        jac.setZero(f_rows, f_cols * x.size());
+    } else {
+        jac.setZero(f_rows * f_cols, x.size());
+    }
 
     // f: ℝ^n ↦ ℝ^{p×q} ⟹ ∇f: ℝ^n ↦ ℝ^{p×(qn)}
     Eigen::VectorXd x_mutable = x;
     for (size_t i = 0; i < x.size(); i++) {
         for (size_t ci = 0; ci < inner_steps; ci++) {
             x_mutable[i] += internal_coeffs[ci] * eps;
-            jac.middleCols(f_cols * i, f_cols) +=
-                external_coeffs[ci] * f(x_mutable);
+            if constexpr (IsTensorOrderEven) {
+                jac.middleCols(f_cols * i, f_cols) +=
+                    external_coeffs[ci] * f(x_mutable);
+            } else {
+                jac.col(i) += external_coeffs[ci] * f(x_mutable).reshaped();
+            }
             x_mutable[i] = x[i];
         }
-        jac.middleCols(f_cols * i, f_cols) /= denom;
+        if constexpr (IsTensorOrderEven) {
+            jac.middleCols(f_cols * i, f_cols) /= denom;
+        } else {
+            jac.col(i) /= denom;
+        }
     }
 }
 
@@ -172,7 +185,12 @@ bool compare_gradient(
     const double test_eps,
     const std::string& msg)
 {
-    assert(x.rows() == y.rows());
+    if (x.rows() != y.rows()) {
+        spdlog::debug(
+            "{} gradient size mismatch: x.rows()={} y.rows()={}", msg, x.rows(),
+            y.rows());
+        return false;
+    }
 
     bool same = true;
     for (long i = 0; i < x.rows(); i++) {
@@ -199,8 +217,13 @@ bool compare_jacobian(
     const double test_eps,
     const std::string& msg)
 {
-    assert(x.rows() == y.rows());
-    assert(x.cols() == y.cols());
+    if (x.rows() != y.rows() || x.cols() != y.cols()) {
+        spdlog::debug(
+            "{} jacobian size mismatch: x.rows()={} x.cols()={} "
+            "y.rows()={} y.cols()={}",
+            msg, x.rows(), x.cols(), y.rows(), y.cols());
+        return false;
+    }
 
     bool same = true;
     for (long i = 0; i < x.rows(); i++) {
@@ -255,5 +278,10 @@ Eigen::MatrixXd unflatten(const Eigen::Ref<const Eigen::VectorXd>& x, int dim)
     }
     return X;
 }
+
+// clang-format off
+template void finite_jacobian<false>(const Eigen::Ref<const Eigen::VectorXd>& x, const std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>& f, Eigen::MatrixXd& jac, const AccuracyOrder accuracy, const double eps);
+template void finite_jacobian<true>(const Eigen::Ref<const Eigen::VectorXd>& x, const std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>& f, Eigen::MatrixXd& jac, const AccuracyOrder accuracy, const double eps);
+// clang-format on
 
 } // namespace fd

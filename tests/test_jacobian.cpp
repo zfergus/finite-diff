@@ -9,7 +9,7 @@
 
 using namespace fd;
 
-TEST_CASE("Test finite difference jacobian of linear", "[jacobian]")
+TEST_CASE("Finite difference jacobian of linear", "[jacobian]")
 {
     int n = GENERATE(1, 2, 4, 10, 100);
 
@@ -32,7 +32,7 @@ TEST_CASE("Test finite difference jacobian of linear", "[jacobian]")
     CHECK(compare_jacobian(jac, fjac));
 }
 
-TEST_CASE("Test finite difference jacobian of trig", "[jacobian]")
+TEST_CASE("Finite difference jacobian of trig", "[jacobian]")
 {
     int n = GENERATE(1, 2, 4, 10, 100);
 

@@ -9,7 +9,7 @@
 
 using namespace fd;
 
-TEST_CASE("Test finite difference gradient of quadratic", "[gradient]")
+TEST_CASE("Finite difference gradient of quadratic", "[gradient]")
 {
     int n = GENERATE(1, 2, 4, 10, 100);
 
@@ -33,7 +33,7 @@ TEST_CASE("Test finite difference gradient of quadratic", "[gradient]")
     CHECK(compare_gradient(grad, fgrad));
 }
 
-TEST_CASE("Test finite difference gradient of Rosenbrock", "[gradient]")
+TEST_CASE("Finite difference gradient of Rosenbrock", "[gradient]")
 {
     const auto f = [](const Eigen::VectorXd& x) {
         double t1 = 1 - x[0];
@@ -59,7 +59,7 @@ TEST_CASE("Test finite difference gradient of Rosenbrock", "[gradient]")
     CHECK(compare_gradient(grad, fgrad));
 }
 
-TEST_CASE("Test finite difference gradient of trig", "[gradient]")
+TEST_CASE("Finite difference gradient of trig", "[gradient]")
 {
     int n = GENERATE(1, 2, 4, 10, 100);
 

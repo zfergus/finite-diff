@@ -27,7 +27,7 @@ option(FINITE_DIFF_BUILD_UNIT_TESTS  "Build unit-tests"  ${FINITE_DIFF_TOPLEVEL_
 
 # Set default minimum C++ standard
 if(FINITE_DIFF_TOPLEVEL_PROJECT)
-    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
     set(CMAKE_CXX_EXTENSIONS OFF)
 endif()
@@ -76,8 +76,8 @@ target_link_libraries(finitediff_finitediff PUBLIC spdlog::spdlog)
 # Compiler options
 ################################################################################
 
-# Use C++11
-target_compile_features(finitediff_finitediff PUBLIC cxx_std_11)
+# Use C++17
+target_compile_features(finitediff_finitediff PUBLIC cxx_std_17)
 
 ################################################################################
 # Tests

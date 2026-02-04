@@ -5,6 +5,8 @@
 add_executable(finitediff_tests
   test_gradient.cpp
   test_jacobian.cpp
+  test_compare_size_mismatch.cpp
+  test_jacobian_tensor.cpp
   test_hessian.cpp
   test_flatten.cpp
 )

@@ -10,7 +10,7 @@
 
 using namespace fd;
 
-TEST_CASE("Test finite difference hessian of quadratic", "[hessian]")
+TEST_CASE("Finite difference hessian of quadratic", "[hessian]")
 {
     AccuracyOrder accuracy = GENERATE(SECOND, FOURTH, SIXTH, EIGHTH);
 
@@ -35,7 +35,7 @@ TEST_CASE("Test finite difference hessian of quadratic", "[hessian]")
     CHECK(compare_hessian(hess, fhess));
 }
 
-TEST_CASE("Test finite difference hessian of Rosenbrock", "[hessian]")
+TEST_CASE("Finite difference hessian of Rosenbrock", "[hessian]")
 {
     AccuracyOrder accuracy = GENERATE(SECOND, FOURTH, SIXTH, EIGHTH);
     const auto f = [](const Eigen::VectorXd& x) {
@@ -58,7 +58,7 @@ TEST_CASE("Test finite difference hessian of Rosenbrock", "[hessian]")
     CHECK(compare_hessian(hess, fhess));
 }
 
-TEST_CASE("Test finite difference hessian of trig", "[hessian]")
+TEST_CASE("Finite difference hessian of trig", "[hessian]")
 {
     AccuracyOrder accuracy = GENERATE(SECOND, FOURTH, SIXTH, EIGHTH);
     int n = GENERATE(1, 2, 4, 10, 25);

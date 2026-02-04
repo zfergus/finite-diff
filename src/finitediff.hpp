@@ -41,18 +41,48 @@ void finite_gradient(
 /**
  * @brief Compute the Jacobian of a function using finite differences.
  *
- * @param[in]  x         Point at which to compute the Jacobian.
- * @param[in]  f         Compute the Jacobian of this function.
- * @param[out] jac       Computed Jacobian.
- * @param[in]  accuracy  Accuracy of the finite differences.
- * @param[in]  eps       Value of the finite difference step.
+ * @param[in]  x              Point at which to compute the Jacobian.
+ * @param[in]  f              Compute the Jacobian of this function.
+ * @param[out] jac            Computed Jacobian.
+ * @param[in]  accuracy       Accuracy of the finite differences.
+ * @param[in]  eps            Value of the finite difference step.
+ * @tparam IsTensorOrderEven  If true, the Jacobian is stored in column-blocks.
+ *                            Otherwise, in row-blocks.
  */
+template <bool IsTensorOrderEven = true>
 void finite_jacobian(
     const Eigen::Ref<const Eigen::VectorXd>& x,
     const std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>& f,
     Eigen::MatrixXd& jac,
     const AccuracyOrder accuracy = SECOND,
     const double eps = 1.0e-8);
+
+/**
+ * @brief Compute the Jacobian of a function using finite differences with
+ *        explicit tensor order.
+ *
+ * Follows the convention that even-order tensors (e.g., matrices) are stored in
+ * column-blocks, while odd-order tensors are stored in row-blocks. This is
+ * based on the tensor vectorization presented in "Dynamic Deformables" by Kim
+ * and Eberle [2022].
+ *
+ * @param[in]  x         Point at which to compute the Jacobian.
+ * @param[in]  f         Compute the Jacobian of this function.
+ * @param[out] jac       Computed Jacobian.
+ * @param[in]  accuracy  Accuracy of the finite differences.
+ * @param[in]  eps       Value of the finite difference step.
+ * @tparam TensorOrder   Order of the output tensor of the function f.
+ */
+template <int TensorOrder>
+inline void finite_jacobian_tensor(
+    const Eigen::Ref<const Eigen::VectorXd>& x,
+    const std::function<Eigen::MatrixXd(const Eigen::VectorXd&)>& f,
+    Eigen::MatrixXd& jac,
+    const AccuracyOrder accuracy = SECOND,
+    const double eps = 1.0e-8)
+{
+    return finite_jacobian<TensorOrder % 2 == 0>(x, f, jac, accuracy, eps);
+}
 
 /**
  * @brief Compute the Hessian of a function using finite differences.
